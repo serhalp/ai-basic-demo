@@ -1,6 +1,7 @@
 import OpenAI from "openai";
 
 export default async function (req: Request): Promise<Response> {
+  process.env["DEBUG"] = "openai-agents:*"
   console.debug(process.env);
 
   if (!process.env["OPENAI_API_KEY"]) {
@@ -11,25 +12,30 @@ export default async function (req: Request): Promise<Response> {
   }
 
   const client = new OpenAI({
-    apiKey: process.env["OPENAI_API_KEY"], // This is the default and can be omitted
+    timeout: 10000
   });
 
-  const input = (await req.text()) || "Spit any hot take of your choice";
-  const response = await client.chat.completions.create({
+  console.log(` Making OpenAI request`, {
     model: "gpt-4o",
-    messages: [
-      {
-        role: "system",
-        content: "You are a very spicy but also fair hot take machine",
-      },
-      {
-        role: "user",
-        content: input,
-      },
-    ],
+    apiKey: client.apiKey,
+    baseURL: client.baseURL
   });
 
-  return Response.json({ answer: response.choices[0].message.content });
+  // // const input = (await req.text()) || "Spit any hot take of your choice";
+  // // const response = await client.chat.completions.create({
+  // //   model : "gpt-4o-mini",
+  // //   messages : [ {role : "user", content : "Respond with `Hello world!`"} ],
+  // // });
+
+  // return Response.json({ answer: response.choices[0].message.content });
+
+  const list = await client.models.list();
+  console.log("Available Open AI models:"); 
+  for await (const model of list) {
+    console.log(model.id)
+  }
+
+  return Response.json({ answer: "all good" });
 }
 
 export const config = {

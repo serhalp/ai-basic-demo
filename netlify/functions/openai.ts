@@ -1,16 +1,19 @@
 import OpenAI from "openai";
 
 export default async function (req: Request) {
-  console.debug(process.env);
-
-
-  const client = new OpenAI({});
+  if (!process.env["OPENAI_API_KEY"]) {
+    return Response.json(
+      { error: "OPENAI_API_KEY is not set" },
+      { status: 500 },
+    );
+  }
 
   const input = (await req.text()) || "Spit any hot take of your choice";
 
+  const client = new OpenAI();
   const response = await client.chat.completions.create({
     model: "gpt-4o-mini",
-    messages: [   
+    messages: [
       {
         role: "user",
         content: input,
@@ -22,5 +25,5 @@ export default async function (req: Request) {
 }
 
 export const config = {
-  path: "/openai-no-user-env",
+  path: "/openai",
 };

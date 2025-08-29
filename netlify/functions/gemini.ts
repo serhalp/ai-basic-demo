@@ -10,12 +10,14 @@ export default async function (req: Request) {
 
   const body = (await req.json().catch(() => null)) as {
     message?: string;
+    model?: string;
   } | null;
   const input = body?.message || "This four-letter country borders Vietnam";
+  const model = body?.model || "gemini-2.0-flash-001";
 
   const genAI = new GoogleGenAI({ apiKey: process.env["GEMINI_API_KEY"] });
   const response = await genAI.models.generateContent({
-    model: "gemini-2.5-flash",
+    model,
     contents: input,
     config: {
       systemInstruction:

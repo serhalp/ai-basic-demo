@@ -12,13 +12,15 @@ export default async function (req: Request) {
 
   const body = (await req.json().catch(() => null)) as {
     message?: string;
+    model?: string;
   } | null;
   const input = body?.message || "This four-letter country borders Vietnam";
+  const model = body?.model || "gpt-4o-mini";
   console.log("Making background OpenAI request with input:", input);
 
   const client = new OpenAI();
   const response = await client.chat.completions.create({
-    model: "gpt-4o-mini",
+    model,
     messages: [
       {
         role: "system",

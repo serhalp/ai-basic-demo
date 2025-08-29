@@ -10,14 +10,21 @@ export default async function (req: Request) {
 
   console.log("Background function started");
 
-  const input =
-    (await req.text()) || "Give me a background processing hot take";
+  const body = (await req.json().catch(() => null)) as {
+    message?: string;
+  } | null;
+  const input = body?.message || "This four-letter country borders Vietnam";
   console.log("Making background OpenAI request with input:", input);
 
   const client = new OpenAI();
   const response = await client.chat.completions.create({
     model: "gpt-4o-mini",
     messages: [
+      {
+        role: "system",
+        content:
+          "You are a Jeopardy! contestant. Answer in the form of a question.",
+      },
       {
         role: "user",
         content: input,

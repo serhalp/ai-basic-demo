@@ -8,7 +8,10 @@ export default async function (req: Request) {
     );
   }
 
-  const input = (await req.text()) || "Give me a spicy hot take of your choice";
+  const body = (await req.json().catch(() => null)) as {
+    message?: string;
+  } | null;
+  const input = body?.message || "This four-letter country borders Vietnam";
   console.log("Making Anthropic request", {
     model: "claude-3-5-haiku-20241022",
     input,
@@ -18,6 +21,7 @@ export default async function (req: Request) {
   const response = await anthropic.messages.create({
     model: "claude-3-5-haiku-20241022",
     max_tokens: 1024,
+    system: "You are a Jeopardy! contestant. Answer in the form of a question.",
     messages: [
       {
         role: "user",

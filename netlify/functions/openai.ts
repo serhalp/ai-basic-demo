@@ -8,12 +8,20 @@ export default async function (req: Request) {
     );
   }
 
-  const input = (await req.text()) || "Spit any hot take of your choice";
+  const body = (await req.json().catch(() => null)) as {
+    message?: string;
+  } | null;
+  const input = body?.message || "This four-letter country borders Vietnam";
 
   const client = new OpenAI();
   const response = await client.chat.completions.create({
     model: "gpt-4o-mini",
     messages: [
+      {
+        role: "system",
+        content:
+          "You are a Jeopardy! contestant. Answer in the form of a question.",
+      },
       {
         role: "user",
         content: input,

@@ -296,6 +296,14 @@
       font-style: italic;
     }
 
+    .welcome-subtitle {
+      text-align: center;
+      color: #888;
+      padding: 0 20px 20px;
+      font-size: 0.85rem;
+      line-height: 1.4;
+    }
+
     @media (min-width: 1400px) {
       .chat-container {
         max-width: 1400px;
@@ -350,12 +358,17 @@
 
 <body>
   <div class="chat-container">
-    <div class="chat-header">🎯 JEOPARDY! AI GAME 🎯</div>
+    <div class="chat-header">✨ JEOPARDY! NETLIFY AI GAME ✨</div>
 
     <div class="chat-messages" id="chatMessages">
       <div class="welcome-message">
-        🎯 Welcome to Jeopardy! Give me a statement and I'll respond with a
-        question!
+        Welcome to Netlify Jeopardy! Give me an answer and I'll respond with
+        the correct question.
+      </div>
+
+      <div class="welcome-subtitle">
+        Remember when IBM Watson went on Jeopardy!? Well, this is nothing like
+        that because we hold neither of those copyrights.
       </div>
     </div>
 
@@ -414,7 +427,7 @@
           </div>
           <div class="backend-option">
             <div class="backend-checkbox">
-              <input type="checkbox" value="/anthropic" />
+              <input type="checkbox" value="/anthropic" checked />
               <span>Anthropic</span>
             </div>
             <div class="model-selector">
@@ -437,7 +450,7 @@
           </div>
           <div class="backend-option">
             <div class="backend-checkbox">
-              <input type="checkbox" value="/gemini" />
+              <input type="checkbox" value="/gemini" checked />
               <span>Gemini</span>
             </div>
             <div class="model-selector">
@@ -464,7 +477,8 @@
         </div>
       </div>
       <div class="chat-input">
-        <input type="text" id="messageInput" placeholder="Give me a Jeopardy! clue..." maxlength="500" />
+        <input type="text" id="messageInput" value="This country borders Germany, Belgium, and the North Sea"
+          maxlength="500" />
         <button id="sendButton">Send</button>
       </div>
     </div>
@@ -536,10 +550,14 @@
       messageDiv.appendChild(messageContent);
       chatMessages.appendChild(messageDiv);
 
-      // Remove welcome message if it exists
+      // Remove welcome messages if they exist
       const welcomeMessage = chatMessages.querySelector(".welcome-message");
+      const welcomeSubtitle = chatMessages.querySelector(".welcome-subtitle");
       if (welcomeMessage) {
         welcomeMessage.remove();
+      }
+      if (welcomeSubtitle) {
+        welcomeSubtitle.remove();
       }
 
       chatMessages.scrollTop = chatMessages.scrollHeight;

@@ -13,7 +13,7 @@ export default async function (req: Request) {
     model?: string;
   } | null;
   const input = body?.message || "This four-letter country borders Vietnam";
-  const model = body?.model || "gemini-2.0-flash-001";
+  const model = body?.model || "gemini-2.5-flash";
 
   const genAI = new GoogleGenAI({ apiKey: process.env["GEMINI_API_KEY"] });
   const response = await genAI.models.generateContent({
